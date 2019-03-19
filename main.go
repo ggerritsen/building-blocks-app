@@ -22,7 +22,7 @@ func main() {
 	}
 	log.Printf("Initialized database\n")
 
-	svc := service.NewDocService(repo)
+	service.NewDocService(repo)
 
 	// Move this to http handler code
 	// d1, err := svc.Store("testDoc")

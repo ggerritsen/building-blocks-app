@@ -8,8 +8,8 @@ import (
 )
 
 type repo interface {
-	QueryByID(id int) (*model.Document, error)
 	Insert(d *model.Document) (id int, e error)
+	QueryByID(id int) (*model.Document, error)
 }
 
 type docService struct {
@@ -30,7 +30,7 @@ func (svc *docService) Store(name string) (*model.Document, error) {
 		return nil, fmt.Errorf("No name provided")
 	}
 
-	d := &model.Document{Name: name, CreateDate: time.Now()}
+	d := &model.Document{Name: name, CreateDate: nowFunc()}
 	id, err := svc.r.Insert(d)
 	if err != nil {
 		return nil, err
@@ -38,4 +38,8 @@ func (svc *docService) Store(name string) (*model.Document, error) {
 
 	d.ID = id
 	return d, nil
+}
+
+var nowFunc = func() time.Time {
+	return time.Now()
 }
