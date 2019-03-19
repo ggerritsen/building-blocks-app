@@ -5,15 +5,12 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq" // justifying comment for golint
+
+	"github.com/ggerritsen/building-blocks-app/model"
 )
 
 type repository struct {
 	db *sql.DB
-}
-
-// Record is the object stored in this repository
-type Record struct {
-	name string
 }
 
 // NewRepositoryWithDb connects to database and uses that connection to create a repository
@@ -45,9 +42,9 @@ func (r *repository) Close() error {
 	return r.db.Close()
 }
 
-// QueryByID will return the record with the provided id
-func (r *repository) QueryByID(id int) (*Record, error) {
-	q := "SELECT name FROM records WHERE ID = $1;"
+// QueryByID will return the Document with the provided id
+func (r *repository) QueryByID(id int) (*model.Document, error) {
+	q := "SELECT name FROM documents WHERE ID = $1;"
 	row := r.db.QueryRow(q, id)
 
 	var name string
@@ -59,19 +56,19 @@ func (r *repository) QueryByID(id int) (*Record, error) {
 		return nil, err
 	}
 
-	return &Record{name: name}, nil
+	return &model.Document{Name: name}, nil
 }
 
 // CreateTable will create the table in the db that is backing this repository
 func (r *repository) CreateTable() error {
-	q := "SELECT 1 FROM records;"
+	q := "SELECT 1 FROM documents;"
 	_, err := r.db.Exec(q)
 	if err == nil {
 		// table already exists, nothing to do here
 		return nil
 	}
 
-	q = "CREATE TABLE records (id SERIAL PRIMARY KEY, name text);"
+	q = "CREATE TABLE documents (id SERIAL PRIMARY KEY, name text);"
 	_, err = r.db.Exec(q)
 	if err != nil {
 		return err
@@ -79,21 +76,22 @@ func (r *repository) CreateTable() error {
 	return nil
 }
 
-// Insert inserts a record with the specified name and returns the id of the newly inserted record
-func (r *repository) Insert(name string) (int, error) {
-	q := "INSERT INTO records (name) VALUES ($1) RETURNING id;"
+// Insert inserts a document and returns the id of the newly inserted document
+func (r *repository) Insert(d *model.Document) (int, error) {
+	// TODO: also insert other fields
+	q := "INSERT INTO documents (name) VALUES ($1) RETURNING id;"
 
 	var id int
-	if err := r.db.QueryRow(q, name).Scan(&id); err != nil {
+	if err := r.db.QueryRow(q, d.Name).Scan(&id); err != nil {
 		return -1, err
 	}
 
 	return id, nil
 }
 
-// Update updates the name of record with the specified id
+// Update updates the name of document with the specified id
 func (r *repository) Update(id int, updatedName string) error {
-	q := "UPDATE records SET name = $1 WHERE id = $2;"
+	q := "UPDATE documents SET name = $1 WHERE id = $2;"
 	_, err := r.db.Exec(q, updatedName, id)
 	if err != nil {
 		return err
@@ -101,9 +99,9 @@ func (r *repository) Update(id int, updatedName string) error {
 	return nil
 }
 
-// Delete removes the record with the specified id
+// Delete removes the document with the specified id
 func (r *repository) Delete(id int) error {
-	q := "DELETE FROM records WHERE id = $1;"
+	q := "DELETE FROM documents WHERE id = $1;"
 	_, err := r.db.Exec(q, id)
 	if err != nil {
 		return err
