@@ -21,7 +21,7 @@ func NewDocService(r repo) *docService {
 	return &docService{r}
 }
 
-func (svc *docService) Read(id int) (*model.Document, error) {
+func (svc *docService) Retrieve(id int) (*model.Document, error) {
 	return svc.r.QueryByID(id)
 }
 

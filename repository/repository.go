@@ -42,23 +42,6 @@ func (r *repository) Close() error {
 	return r.db.Close()
 }
 
-// QueryByID will return the Document with the provided id
-func (r *repository) QueryByID(id int) (*model.Document, error) {
-	q := "SELECT name FROM documents WHERE ID = $1;"
-	row := r.db.QueryRow(q, id)
-
-	var name string
-	err := row.Scan(&name)
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.Document{Name: name}, nil
-}
-
 // CreateTable will create the table in the db that is backing this repository
 func (r *repository) CreateTable() error {
 	q := "SELECT 1 FROM documents;"
@@ -74,6 +57,23 @@ func (r *repository) CreateTable() error {
 		return err
 	}
 	return nil
+}
+
+// QueryByID will return the Document with the provided id
+func (r *repository) QueryByID(id int) (*model.Document, error) {
+	q := "SELECT id, name FROM documents WHERE ID = $1;"
+	row := r.db.QueryRow(q, id)
+
+	d := &model.Document{}
+	err := row.Scan(&d.ID, &d.Name)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return d, nil
 }
 
 // Insert inserts a document and returns the id of the newly inserted document

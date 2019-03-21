@@ -46,8 +46,8 @@ func TestStoreAndRead(t *testing.T) {
 		t.Errorf("got %+v want %+v", got, want)
 	}
 
-	// test read
-	got, err = svc.Read(got.ID)
+	// test retrieve
+	got, err = svc.Retrieve(got.ID)
 	if err != nil {
 		t.Error(err)
 	}

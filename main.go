@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
 
+	"github.com/ggerritsen/building-blocks-app/handler"
 	"github.com/ggerritsen/building-blocks-app/repository"
 	"github.com/ggerritsen/building-blocks-app/service"
 )
@@ -22,22 +24,18 @@ func main() {
 	}
 	log.Printf("Initialized database\n")
 
-	service.NewDocService(repo)
+	svc := service.NewDocService(repo)
+	h := handler.NewHandler(svc)
 
-	// Move this to http handler code
-	// d1, err := svc.Store("testDoc")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Printf("Inserted document %+v\n", d1)
+	c := make(chan error, 1)
+	go func() {
+		c <- http.ListenAndServe(":8081", h)
+	}()
 
-	// d2, err := svc.Read(d1.ID)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// if d1 != d2 {
-	// 	log.Fatalf("Got %+v want %+v", d2, d1)
-	// }
+	err = <-c
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	log.Printf("Stopping app...\n")
+	log.Printf("App stopped.\n")
 }
