@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ggerritsen/building-blocks-app/handler"
+	"github.com/ggerritsen/building-blocks-app/kafkaclient"
 	"github.com/ggerritsen/building-blocks-app/repository"
 	"github.com/ggerritsen/building-blocks-app/service"
 )
@@ -25,14 +26,21 @@ func main() {
 	log.Printf("Initialized database\n")
 
 	svc := service.NewDocService(repo)
-	h := handler.NewHandler(svc)
+	stop := make(chan error, 2)
 
-	c := make(chan error, 1)
+	c := kafkaclient.NewConsumer([]string{"localhost:9092"}, "test", svc)
 	go func() {
-		c <- http.ListenAndServe(":8081", h)
+		stop <- c.Consume()
 	}()
+	log.Printf("Started kafka consumer\n")
 
-	err = <-c
+	h := handler.NewHandler(svc)
+	go func() {
+		stop <- http.ListenAndServe(":8081", h)
+	}()
+	log.Printf("Started http handler\n")
+
+	err = <-stop
 	if err != nil {
 		log.Fatal(err)
 	}

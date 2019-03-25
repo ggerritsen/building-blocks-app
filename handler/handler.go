@@ -10,12 +10,6 @@ import (
 	"github.com/ggerritsen/building-blocks-app/model"
 )
 
-// Record is the default data type
-type Record struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
 type docService interface {
 	Store(name string) (*model.Document, error)
 	Retrieve(id int) (*model.Document, error)

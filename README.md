@@ -23,3 +23,9 @@ e.g. `git clone git@github.com:ggerritsen/postgresql-block repository`
 3. Update the package name of the building block files to reflect the new path  
 e.g. `sed -i '' 's/package main/package <INSERT NEW NAME>/g' $(grep -Ril package *)`
 4. Use the building block's code in the app and edit it where necessary
+
+
+### Next steps
+- properly vendor in dependencies (using go mod)
+- use json in the interfaces as well
+- deploy to heroku/AWS
