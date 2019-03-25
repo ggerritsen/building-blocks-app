@@ -25,12 +25,12 @@ func (svc *docService) Retrieve(id int) (*model.Document, error) {
 	return svc.r.QueryByID(id)
 }
 
-func (svc *docService) Store(name string) (*model.Document, error) {
+func (svc *docService) Store(name, desc string) (*model.Document, error) {
 	if name == "" {
 		return nil, fmt.Errorf("No name provided")
 	}
 
-	d := &model.Document{Name: name, CreateDate: nowFunc()}
+	d := &model.Document{Name: name, Description: desc, CreateDate: nowFunc()}
 	id, err := svc.r.Insert(d)
 	if err != nil {
 		return nil, err

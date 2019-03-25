@@ -16,7 +16,7 @@ type consumer struct {
 }
 
 type docStore interface {
-	Store(name string) (*model.Document, error)
+	Store(name, desc string) (*model.Document, error)
 }
 
 // NewConsumer creates a consumer that consumes from a kafka topic
@@ -49,7 +49,7 @@ func (c *consumer) Consume() error {
 			return fmt.Errorf("could not deserialize %q: %s", string(m.Value), err)
 		}
 
-		_, err = c.s.Store(d.Name)
+		_, err = c.s.Store(d.Name, d.Description)
 		if err != nil {
 			return err
 		}

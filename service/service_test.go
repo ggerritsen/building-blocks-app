@@ -37,11 +37,11 @@ func TestStoreAndRead(t *testing.T) {
 	svc := NewDocService(r)
 
 	// test store
-	got, err := svc.Store("test")
+	got, err := svc.Store("testName", "testDescription")
 	if err != nil {
 		t.Error(err)
 	}
-	want := &model.Document{ID: r.idCounter, Name: "test", CreateDate: now}
+	want := &model.Document{ID: r.idCounter, Name: "testName", Description: "testDescription", CreateDate: now}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %+v want %+v", got, want)
 	}

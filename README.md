@@ -27,19 +27,18 @@ e.g. `sed -i '' 's/package main/package <INSERT NEW NAME>/g' $(grep -Ril package
 
 ### Next steps
 - properly vendor in dependencies (using go mod)
-- use json in the interfaces as well
 - deploy to heroku/AWS
 
 ## Handy commands
 - Create a document via kafka:  
-`./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test`
-`{"name":"testDocument"}`
+`./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test`  
+`{"name":"testDocument","description":"test description"}`  
 - Create a document via http:  
-`curl -v -X POST -d "name=testDocument" http://localhost:8081/documents`
+`curl -v -X POST -d "name=testDocument;description=testDescription" http://localhost:8081/documents`
 - Retrieve a document via http:  
 `curl http://localhost:8081/documents/1`
 
-### To become a full-fleged app
+### To become a full-fledged app
 - more tests
 - graceful shutdown
 - proper logging

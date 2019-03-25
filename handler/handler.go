@@ -11,7 +11,7 @@ import (
 )
 
 type docService interface {
-	Store(name string) (*model.Document, error)
+	Store(name, desc string) (*model.Document, error)
 	Retrieve(id int) (*model.Document, error)
 }
 
@@ -84,7 +84,9 @@ func (h *handler) saveDoc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	doc, err := h.s.Store(name)
+	desc := r.FormValue("description")
+
+	doc, err := h.s.Store(name, desc)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
