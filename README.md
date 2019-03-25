@@ -16,10 +16,10 @@ A building block repo consists of pre-written code that does one thing and does 
 
 
 ## How to include a building block
-1. Clone to a directory:  
+1. Clone the building block to a directory:  
 e.g. `git clone git@github.com:ggerritsen/postgresql-block repository`
 2. Remove the .git directory and .gitignore file:  
-`rm -rf .git && rm .gitignore`
+`cd repository && rm -rf .git && rm .gitignore`
 3. Update the package name of the building block files to reflect the new path  
-e.g. `sed -i '.bak' 's/package main/package <INSERT NEW NAME>/g' $(git grep package | cut -f1 -d':')`
+e.g. `sed -i '' 's/package main/package <INSERT NEW NAME>/g' $(grep -Ril package *)`
 4. Use the building block's code in the app and edit it where necessary
