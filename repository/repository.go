@@ -51,7 +51,7 @@ func (r *repository) CreateTable() error {
 		return nil
 	}
 
-	q = "CREATE TABLE documents (id SERIAL PRIMARY KEY, name text);"
+	q = "CREATE TABLE documents (id SERIAL PRIMARY KEY, name text, createDateTime timestamptz);"
 	_, err = r.db.Exec(q)
 	if err != nil {
 		return err
@@ -61,11 +61,11 @@ func (r *repository) CreateTable() error {
 
 // QueryByID will return the Document with the provided id
 func (r *repository) QueryByID(id int) (*model.Document, error) {
-	q := "SELECT id, name FROM documents WHERE ID = $1;"
+	q := "SELECT id, name, createDateTime FROM documents WHERE ID = $1;"
 	row := r.db.QueryRow(q, id)
 
 	d := &model.Document{}
-	err := row.Scan(&d.ID, &d.Name)
+	err := row.Scan(&d.ID, &d.Name, &d.CreateDate)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -78,11 +78,10 @@ func (r *repository) QueryByID(id int) (*model.Document, error) {
 
 // Insert inserts a document and returns the id of the newly inserted document
 func (r *repository) Insert(d *model.Document) (int, error) {
-	// TODO: also insert other fields
-	q := "INSERT INTO documents (name) VALUES ($1) RETURNING id;"
+	q := "INSERT INTO documents (name, createDateTime) VALUES ($1, $2) RETURNING id;"
 
 	var id int
-	if err := r.db.QueryRow(q, d.Name).Scan(&id); err != nil {
+	if err := r.db.QueryRow(q, d.Name, d.CreateDate).Scan(&id); err != nil {
 		return -1, err
 	}
 

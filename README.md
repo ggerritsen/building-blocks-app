@@ -29,3 +29,13 @@ e.g. `sed -i '' 's/package main/package <INSERT NEW NAME>/g' $(grep -Ril package
 - properly vendor in dependencies (using go mod)
 - use json in the interfaces as well
 - deploy to heroku/AWS
+
+### To become a full-fleged app
+- graceful shutdown
+- proper logging
+- auto-recovery from errors 
+- validation
+
+### Sources
+- hexagonal architecture
+- Brooks
