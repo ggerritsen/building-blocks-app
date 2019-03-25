@@ -46,5 +46,7 @@ e.g. `sed -i '' 's/package main/package <INSERT NEW NAME>/g' $(grep -Ril package
 - validation
 
 ### Sources
-- [Hexagonal architecture](https://dzone.com/articles/hexagonal-architecture-what-is-it-and-how-does-it)
 - [Fred Brooks (1975), The mythical man-month](https://en.wikipedia.org/wiki/The_Mythical_Man-Month)
+- [Hexagonal architecture](https://dzone.com/articles/hexagonal-architecture-what-is-it-and-how-does-it)
+- [Hexagonal architecture in go](https://www.joeldholmes.com/post/go-hex-arch/)
+
