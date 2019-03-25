@@ -30,12 +30,22 @@ e.g. `sed -i '' 's/package main/package <INSERT NEW NAME>/g' $(grep -Ril package
 - use json in the interfaces as well
 - deploy to heroku/AWS
 
+## Handy commands
+- Create a document via kafka:
+`./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test`
+`{"name":"testDocument"}`
+- Create a document via http:
+`curl -v -X POST -d "name=testDocument" http://localhost:8081/documents`
+- Retrieve a document via http:
+`curl http://localhost:8081/documents/1`
+
 ### To become a full-fleged app
+- more tests
 - graceful shutdown
 - proper logging
 - auto-recovery from errors 
 - validation
 
 ### Sources
-- hexagonal architecture
-- Brooks
+- [hexagonal architecture]|(https://dzone.com/articles/hexagonal-architecture-what-is-it-and-how-does-it)
+- [Fred Brooks (1975), The mythical man-month]|(https://en.wikipedia.org/wiki/The_Mythical_Man-Month)
